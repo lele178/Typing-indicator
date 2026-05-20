@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Webchat embedding</title>
+    <meta name="viewport" content="width=device-width" />
+    <style>
+      html {
+        background-color: #bbb;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Start of the Cognigy Webchat embedding code -->
+    <script src="https://cdn.cognigy.ai/webchat/v2/webchat.js"></script>
+
+    <script>
+      const DELAY = 500;
+      const setIndicatorVisibility = (visible) => {
+        const indicatorElement = document.querySelector(
+          "[data-cognigy-webchat-root] .webchat-typing-indicator"
+        );
+        if (visible && indicatorElement) {
+          indicatorElement.style.visibility = "visible";
+        } else {
+          indicatorElement.style.visibility = "hidden";
+        }
+      };
+
+      const endpointUrl =
+        "https://webchat-trial.cognigy.ai/v3/e23092ea623eae62f0187d34d36ef91ba3d1ee11ecb6032d7ccc3938ca9351e1";
+
+      initWebchat(endpointUrl).then((webchat) => {
+        window.cognigyWebchat = webchat;
+        webchat.registerAnalyticsService((event) => {
+          if (event?.payload?.data?.showTypingIndicator) {
+            setTimeout(setIndicatorVisibility, DELAY, true);
+          } else if (event?.payload?.data?.hideTypingIndicator) {
+            setTimeout(setIndicatorVisibility, DELAY, false);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
